@@ -1,0 +1,36 @@
+ul.choose-rating {
+  list-style-type: none; }
+
+.clear-rating {
+  margin-top: 1%; }
+  .clear-rating .clear-icon {
+    font-size: 30px;
+    color: #666;
+    float: left; }
+
+.star-div {
+  position: relative;
+  padding-top: 5px;
+  font-size: 30px;
+  display: inline-block;
+  overflow-y: visible;
+  height: 35px; }
+
+.partial-star-div {
+  position: absolute;
+  font-size: 30px;
+  top: 0;
+  left: 0;
+  width: 15px;
+  color: gold;
+  overflow-x: hidden;
+  padding-top: 5px;
+  height: 35px; }
+
+.colour-star {
+  color: gold; }
+
+.grey-star {
+  color: #666; }
+
+/*# sourceMappingURL=mjj-comment-ratings.css.map */

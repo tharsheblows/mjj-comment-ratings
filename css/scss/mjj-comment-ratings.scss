@@ -1,0 +1,58 @@
+$star-color: gold;
+$star-grey: #666;
+$star-size: 30px;
+$div-height: 35px;
+
+ul.choose-rating{
+	list-style-type: none;
+}
+
+.clear-rating{
+
+	margin-top: 1%;
+
+	.clear-icon{
+		font-size: $star-size;
+		color: $star-grey;
+		float: left;
+	}
+
+}
+
+.star-div {
+	position: relative;
+	padding-top: $star-size / 6;
+	font-size: $star-size;
+	display: inline-block;
+	overflow-y: visible;
+	height: $div-height;
+}
+
+.partial-star-div{
+    position: absolute;
+    font-size: $star-size;
+    top: 0;
+    left: 0;
+    width: $star-size / 2;
+    color: $star-color;
+    overflow-x: hidden;
+    padding-top: $star-size / 6;
+    height: $div-height;
+}
+
+.colour-star{
+	color: $star-color;
+}
+
+.grey-star{
+		color: $star-grey;
+}
+
+
+
+
+// use like this -- from http://jsfiddle.net/LV7SS/2/
+// 	<div class="colour-star-div">
+//     &#x2605;
+//     <div class="partial-star-div">&#x2605;</div>
+// 	</div>
