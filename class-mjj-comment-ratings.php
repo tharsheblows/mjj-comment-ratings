@@ -94,7 +94,7 @@ class MJJ_Comment_Ratings{
 		$post_id = get_comment( $comment_id )->comment_post_ID;
 		$average_rating = $this->calculate_average_rating( $post_id );
 
-		update_post_meta( $post_id, '_mjj_post_rating', $average_rating );
+		update_post_meta( $post_id, '_mjj_post_rating', (float)$average_rating );
 	}
 
 	public function calculate_average_rating( $post_id ){
