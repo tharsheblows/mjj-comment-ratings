@@ -16,13 +16,19 @@ $( '.choose-rating' ).on( 'click', '.star-div', function( e ){
 	$( this ).prevAll().andSelf().removeClass( 'grey-star' ).addClass( 'colour-star' );
 	$( this ).nextAll().removeClass( 'colour-star' ).addClass( 'grey-star' );
 
+});
+
+$( '.clear-rating' ).on( 'click', function ( e ){
+	$( this ).closest( '.choose-rating' ).find( '.set' ).removeClass( 'set' ).addClass( 'choose' );
+	$( this ).closest( '.choose-rating' ).find( '.colour-star' ).removeClass( 'colour-star' ).addClass( 'grey-star' );
+});
+
+$( '#initial-rating .choose-rating' ).on( 'click', '.star-div', function( e ){
 	var rating = $( this ).attr( 'data-rating' );
 	$( '#review-rating' ).attr( 'value', rating );
 });
 
-$( '.clear-rating' ).on( 'click', function ( e ){
-	$( '.choose-rating .set' ).removeClass( 'set' ).addClass( 'choose' );
-	$( '.choose-rating .colour-star' ).removeClass( 'colour-star' ).addClass( 'grey-star' );
+$( '#initial-rating .clear-rating' ).on( 'click', function ( e ){
 	$( '#review-rating' ).attr( 'value', 0 );
 });
 
