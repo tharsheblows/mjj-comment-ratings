@@ -51,6 +51,7 @@ class MJJ_Comment_Ratings{
     	echo '</ul>';
 
     	echo '<input type="hidden" name="review-rating" id="review-rating" value="0" />';
+    	echo '<input type="hidden" name="review-rating-nonce" id="review-rating-nonce" value="' . wp_create_nonce( 'review-ratings-nonce' ) . '" />';
     	echo '</div>';
 
 	}
@@ -74,7 +75,9 @@ class MJJ_Comment_Ratings{
 		$rating_list = '<ul class="star-rating' . $ul_class .  '">';
 
 		for( $i = 1; $i <= $colour_stars; $i++ ){
-			$rating_list .= '<li data-rating="' . $i . '" class="star-div colour-star' . $li_class . '" style="width: ' . $width . 'px; font-size: ' . $width . 'px;">';
+
+			$chosen = ( $edit && ( $i == $colour_stars ) ) ? ' chosen-rating' : '';
+			$rating_list .= '<li data-rating="' . $i . '" class="star-div colour-star' . $li_class . $chosen . '" style="width: ' . $width . 'px; font-size: ' . $width . 'px;">';
       		$rating_list .= '&#x2605;';
       		$rating_list .= '</li>';
 		}
@@ -102,9 +105,32 @@ class MJJ_Comment_Ratings{
 	}
 
 	public function save_rating_field( $comment_id ){
-		if ( ( isset( $_POST['review-rating'] ) ) && ( is_numeric( $_POST['review-rating'] ) ) ){
-			$rating = (int)$_POST['review-rating'];
-			add_comment_meta( $comment_id, '_mjj_comment_rating', $rating );
+
+		if( ( !isset( $_POST[ 'review-rating-nonce' ] ) ) || ! wp_verify_nonce( $_POST[ 'review-rating-nonce' ], 'review-ratings-nonce' ) ) {
+			error_log( 'save_rating_field nonce failed', 0 );
+			return;
+		}
+
+		$current_user = wp_get_current_user();
+		if( ! wp_get_current_user() ){
+			error_log( 'must be logged in to save rating', 0 );
+			return;
+		}
+
+		$comment_author_id = get_comment( $comment_id )->user_id; // the comment author's user id
+
+		// the default is that you can add the rating if you own the comment
+		$user_is_author = ( (int)$comment_author_id === (int)$current_user->ID ) ? 'yes' : 'no';
+
+		// this filter allows you to add moderators etc -- currently no one but the author can save a rating with this function
+		$user_can_rate = apply_filters( 'mjj-can-save-rating', $user_is_author, $current_user );
+		
+		if( $user_can_rate === 'yes' ){
+
+			if ( ( isset( $_POST['review-rating'] ) ) && ( is_numeric( $_POST['review-rating'] ) ) ){
+				$rating = (int)$_POST['review-rating'];
+				add_comment_meta( $comment_id, '_mjj_comment_rating', $rating );
+			}
 		}
 	}
 
@@ -125,7 +151,7 @@ class MJJ_Comment_Ratings{
 		update_post_meta( $post_id, '_mjj_post_rating', (float)$average_rating );
 	}
 
-	public static function calculate_average_rating( $post_id ){
+	private static function calculate_average_rating( $post_id ){
 		global $wpdb;
 
 		$prepared_query = $wpdb->prepare(
