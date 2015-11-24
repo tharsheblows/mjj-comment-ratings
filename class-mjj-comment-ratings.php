@@ -19,7 +19,10 @@ class MJJ_Comment_Ratings{
 		add_action( 'wp_enqueue_scripts', array( $this, 'add_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'add_scripts' ) );
 
+		// ratings are added for logged in users
 		add_action( 'comment_form_logged_in_after', array( $this, 'add_rating_field' ) );
+
+		// when the comment saves, it saves the individual comment rating, then re-calculates the rating of the post and saves that
 		add_action( 'comment_post', array( $this, 'save_rating_field' ) );
 		add_action( 'comment_post', array( 'MJJ_Comment_Ratings', 'save_average_rating' ) );
 	}
@@ -40,7 +43,14 @@ class MJJ_Comment_Ratings{
 
 	} // end add_scripts
 
+	// this adds the ratings field to the comment form
 	public function add_rating_field(){
+
+		// does this post type have ratings enabled?
+		$post_types = get_option( 'mjj_choose_post_types_for_ratings', false );
+		if( ! in_array( get_post_type(), (array)$post_types ) ){
+			return;
+		}
 
 		echo '<div id="initial-rating">';
     	echo '<ul class="choose-rating">';
@@ -56,6 +66,7 @@ class MJJ_Comment_Ratings{
 
 	}
 
+	// use this to show the star rating anywhere. Set $edit to true to get an editable field which you can use in a save function
 	static function show_star_rating( $rating = 0, $width = 30, $edit = false ){
 
 		$star_fraction_width = ceil( $width * fmod( (float)$rating, 1 ) );
@@ -104,6 +115,7 @@ class MJJ_Comment_Ratings{
 		return $rating_list;
 	}
 
+	// this saves the initial comment rating to the commentmeta table with the metakey _mjj_comment_rating - it fires on comment_post, just after a comment is saved
 	public function save_rating_field( $comment_id ){
 
 		if( ( !isset( $_POST[ 'review-rating-nonce' ] ) ) || ! wp_verify_nonce( $_POST[ 'review-rating-nonce' ], 'review-ratings-nonce' ) ) {
@@ -117,7 +129,16 @@ class MJJ_Comment_Ratings{
 			return;
 		}
 
-		$comment_author_id = get_comment( $comment_id )->user_id; // the comment author's user id
+		$comment = get_comment( $comment_id );
+		$comment_post_ID = $comment->comment_post_ID;
+		$comment_author_id = $comment->user_id; // the comment author's user id
+
+		// does this post type have ratings enabled?
+		$post_types = get_option( 'mjj_choose_post_types_for_ratings', false );
+		$post_type = get_post_type( $comment_post_ID );
+		if( ! in_array( $post_type, (array)$post_types ) ){
+			return;
+		}
 
 		// the default is that you can add the rating if you own the comment
 		$user_is_author = ( (int)$comment_author_id === (int)$current_user->ID ) ? 'yes' : 'no';
@@ -134,6 +155,7 @@ class MJJ_Comment_Ratings{
 		}
 	}
 
+	// this saves the average rating to the postmeta table with the metakey _mjj_{$post_type}_rating - it fires on comment_post, just after a comment is saved
 	public static function save_average_rating( $comment_id = 0, $post_id = 0 ){
 
 		if( $comment_id === 0 && $post_id === 0 ){
@@ -146,11 +168,20 @@ class MJJ_Comment_Ratings{
 			return;
 		}
 
+		$post_type = get_post_type( $post_id );
+
+		// does this post type have ratings enabled?
+		$post_types = get_option( 'mjj_choose_post_types_for_ratings', false );
+		if( ! in_array( $post_type, (array)$post_types ) ){
+			return;
+		}
+
 		$average_rating = self::calculate_average_rating( $post_id );
 
-		update_post_meta( $post_id, '_mjj_post_rating', (float)$average_rating );
+		update_post_meta( $post_id, '_mjj_' . esc_attr( $post_type ) .'_rating', number_format( (float)$average_rating, 4 ) );
 	}
 
+	// this calculates the average rating for a post
 	private static function calculate_average_rating( $post_id ){
 		global $wpdb;
 
@@ -171,6 +202,5 @@ class MJJ_Comment_Ratings{
 
 		return $average_rating;
 	}
-
 
 }

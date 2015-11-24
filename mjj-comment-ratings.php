@@ -12,4 +12,7 @@ if ( ! defined( 'WPINC' ) ) {
 } // end if
 
 require_once( plugin_dir_path( __FILE__ ) . 'class-mjj-comment-ratings.php' );
+require_once( plugin_dir_path( __FILE__ ) . 'class-mjj-comment-ratings-admin.php' );
+
 MJJ_Comment_Ratings::get_instance();
+MJJ_Comment_Ratings_Admin::get_instance();
