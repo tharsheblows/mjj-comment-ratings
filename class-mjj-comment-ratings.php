@@ -178,7 +178,11 @@ class MJJ_Comment_Ratings{
 
 		$average_rating = self::calculate_average_rating( $post_id );
 
-		update_post_meta( $post_id, '_mjj_' . esc_attr( $post_type ) .'_rating', number_format( (float)$average_rating, 4 ) );
+		$update_rating = update_post_meta( (int)$post_id, '_mjj_' . esc_attr( $post_type ) .'_rating', number_format( (float)$average_rating, 4 ) );
+
+		$saved_rating = ( $update_rating ) ? $average_rating : false;
+
+		return $saved_rating;
 	}
 
 	// this calculates the average rating for a post
