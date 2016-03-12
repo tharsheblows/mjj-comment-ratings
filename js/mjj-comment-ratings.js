@@ -1,4 +1,4 @@
-/*!  - v1.0.0 - 2015-11-05
+/*!  - v1.0.0 - 2015-12-28
  * 
  * Copyright (c) 2015; * Licensed GPLv2+ */
  jQuery('document').ready( function ($){

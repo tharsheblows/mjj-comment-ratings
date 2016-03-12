@@ -24,7 +24,6 @@ class MJJ_Comment_Ratings{
 
 		// when the comment saves, it saves the individual comment rating, then re-calculates the rating of the post and saves that
 		add_action( 'comment_post', array( $this, 'save_rating_field' ) );
-		add_action( 'comment_post', array( 'MJJ_Comment_Ratings', 'save_average_rating' ) );
 	}
 
 	public function add_styles() {
@@ -51,13 +50,16 @@ class MJJ_Comment_Ratings{
 		if( ! in_array( get_post_type(), (array)$post_types ) ){
 			return;
 		}
-
 		echo '<div id="initial-rating">';
+		echo '<h4>Rate this recipe</h4>';
+		echo '<p class="meta-info">Leave a rating between one star and five stars (five is the best!). 
+				If you&rsquo;d rather leave a review without a rating, we won&rsquo;t count yours if you leave this blank 
+				so don&rsquo;t worry about bringing the average down if you just have a question.</p>';
     	echo '<ul class="choose-rating">';
     	for( $i = 1; $i <= 5; $i++ ){
     		echo '<li class="star-div grey-star choose" data-rating="'. $i .'"> &#x2605;</li>';
     	}
-    	echo '<li class="clear-rating"><span class="clear-icon">&#x02297;</span> clear rating</li>';
+    	echo '<li class="clear-rating"><span class="clear-icon">&#x02297;</span> delete rating</li>';
     	echo '</ul>';
 
     	echo '<input type="hidden" name="review-rating" id="review-rating" value="0" />';
@@ -150,7 +152,15 @@ class MJJ_Comment_Ratings{
 
 			if ( ( isset( $_POST['review-rating'] ) ) && ( is_numeric( $_POST['review-rating'] ) ) ){
 				$rating = (int)$_POST['review-rating'];
-				add_comment_meta( $comment_id, '_mjj_comment_rating', $rating );
+				error_log( $rating, 0 );
+				if( is_numeric( $rating ) && $rating !== 0 ){
+					add_comment_meta( $comment_id, '_mjj_comment_rating', $rating );
+				}
+				else{
+					delete_comment_meta( $comment_id, '_mjj_comment_rating' );
+				}
+
+				self::save_average_rating( $comment_id, $comment_post_ID );
 			}
 		}
 	}

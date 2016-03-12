@@ -4,7 +4,6 @@ ul.choose-rating {
 .clear-rating {
   margin-top: 1%; }
   .clear-rating .clear-icon {
-    font-size: 30px;
     color: #666;
     float: left; }
 
@@ -24,7 +23,6 @@ ul.choose-rating {
   width: 15px;
   color: gold;
   overflow-x: hidden;
-  padding-top: 5px;
   height: 35px; }
 
 .colour-star {

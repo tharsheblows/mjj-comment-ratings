@@ -1,6 +1,6 @@
 # MJJ Comment Ratings
 
-This adds a 5 star field to the WordPress comment form, saves the results for each comment submitted then calculates the average rating for a post from all the comments.
+This adds a 5 star field to the WordPress comment form, saves the results for each comment submitted then calculates the average rating for a post from all the comments. You need to enable this on the Settings->Discussion page for each post type to which you'd like to add ratings. (The checkboxes are at the bottom of that page.)
 
 The comment form field is the only thing automatically added. To show stored ratings (either post or the individual comment) use :
 

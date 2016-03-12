@@ -12,7 +12,6 @@ ul.choose-rating{
 	margin-top: 1%;
 
 	.clear-icon{
-		font-size: $star-size;
 		color: $star-grey;
 		float: left;
 	}
@@ -36,7 +35,7 @@ ul.choose-rating{
     width: $star-size / 2;
     color: $star-color;
     overflow-x: hidden;
-    padding-top: $star-size / 6;
+    //padding-top: $star-size / 6;
     height: $div-height;
 }
 
