@@ -206,6 +206,7 @@ class MJJ_Comment_Ratings{
 					( SELECT comment_ID
 						FROM $wpdb->comments
 						WHERE comment_post_ID = %d
+						AND comment_approved = 1
 					) c
 				ON c.comment_ID = m.comment_id WHERE m.meta_key = '_mjj_comment_rating'
 				",
