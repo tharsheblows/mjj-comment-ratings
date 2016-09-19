@@ -152,7 +152,6 @@ class MJJ_Comment_Ratings{
 
 			if ( ( isset( $_POST['review-rating'] ) ) && ( is_numeric( $_POST['review-rating'] ) ) ){
 				$rating = (int)$_POST['review-rating'];
-				error_log( $rating, 0 );
 				if( is_numeric( $rating ) && $rating !== 0 ){
 					add_comment_meta( $comment_id, '_mjj_comment_rating', $rating );
 				}
