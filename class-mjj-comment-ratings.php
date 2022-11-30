@@ -52,8 +52,8 @@ class MJJ_Comment_Ratings{
 		}
 		echo '<div id="initial-rating">';
 		echo '<h4>Rate this recipe</h4>';
-		echo '<p class="meta-info">Leave a rating between one star and five stars (five is the best!). 
-				If you&rsquo;d rather leave a review without a rating, we won&rsquo;t count yours if you leave this blank 
+		echo '<p class="meta-info">Leave a rating between one star and five stars (five is the best!).
+				If you&rsquo;d rather leave a review without a rating, we won&rsquo;t count yours if you leave this blank
 				so don&rsquo;t worry about bringing the average down if you just have a question.</p>';
     	echo '<ul class="choose-rating">';
     	for( $i = 1; $i <= 5; $i++ ){
@@ -73,7 +73,7 @@ class MJJ_Comment_Ratings{
 
 		$star_fraction_width = ceil( $width * fmod( (float)$rating, 1 ) );
 
-		$colour_stars = floor( $rating );
+		$colour_stars = floor( (float) $rating );
 
 		$full_stars = ( $star_fraction_width != 0 ) ? 4 : 5; // if there is a partial star, we need to subtract one from the grey stars
 		$grey_stars = $full_stars - $colour_stars; // this is 4 because one star will be mixed
@@ -147,7 +147,7 @@ class MJJ_Comment_Ratings{
 
 		// this filter allows you to add moderators etc -- currently no one but the author can save a rating with this function
 		$user_can_rate = apply_filters( 'mjj-can-save-rating', $user_is_author, $current_user );
-		
+
 		if( $user_can_rate === 'yes' ){
 
 			if ( ( isset( $_POST['review-rating'] ) ) && ( is_numeric( $_POST['review-rating'] ) ) ){
@@ -172,7 +172,7 @@ class MJJ_Comment_Ratings{
 		}
 
 		$post_id = ( $post_id === 0 ) ? get_comment( $comment_id )->comment_post_ID : $post_id;
-		
+
 		if( $post_id === 0 ){
 			return;
 		}
