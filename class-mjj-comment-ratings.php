@@ -71,7 +71,7 @@ class MJJ_Comment_Ratings{
 	// use this to show the star rating anywhere. Set $edit to true to get an editable field which you can use in a save function
 	static function show_star_rating( $rating = 0, $width = 30, $edit = false ){
 
-		$star_fraction_width = ceil( $width * fmod( (float)$rating, 1 ) );
+		$star_fraction_width = ceil( (int) $width * fmod( (float) $rating, 1 ) );
 
 		$colour_stars = floor( (float) $rating );
 
